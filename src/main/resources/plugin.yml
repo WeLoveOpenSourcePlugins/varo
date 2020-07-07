@@ -1,0 +1,4 @@
+name: Varo
+version: @version@
+main: org.wlosp.varo.VaroPlugin
+api-version: '1.16'

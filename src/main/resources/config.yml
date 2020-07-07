@@ -1,0 +1,33 @@
+name: WLOSPVaro
+gracePeriod: 15000
+enableWhitelist: true
+borderSize: 1
+shrinkBorderOnDeath: 1
+friendlyFire: false
+fishingRodPvp: true
+blockedItems:
+  - STONE
+
+time:
+  timezone: Europe/Berlin
+  startTime: '11:00'
+  shutdownTime: '18:00'
+
+tablist:
+  header: Welcome to %name% varo
+  footer: You are in your %episode$th session
+
+strikes:
+  1: PUBLISH_COORDINATES
+  2: DELETE_INVENTORY_AND_CHEST
+  3: BAN
+
+locations:
+  SPAWN:
+    x: 0
+    y: 0
+    z: 0
+  NETHER_PORTAL:
+    x: 0
+    y: 0
+    z: 0
