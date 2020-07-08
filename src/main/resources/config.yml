@@ -5,6 +5,7 @@ borderSize: 1
 shrinkBorderOnDeath: 1
 friendlyFire: false
 fishingRodPvp: true
+itemBlockStrategy: DELETE # or IGNORE
 blockedItems:
   - STONE
 

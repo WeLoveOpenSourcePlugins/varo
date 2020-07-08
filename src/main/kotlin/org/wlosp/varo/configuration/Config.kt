@@ -12,6 +12,7 @@ data class Config(
     val enableWhitelist: Boolean,
     val friendlyFire: Boolean,
     val fishingRod: Boolean,
+    val itemBlockStrategy: ItemBlockStrategy,
     val blockedItems: List<Material>,
     val time: TimeConfig,
     val tablist: TablistConfig,
@@ -35,6 +36,11 @@ data class Config(
         NETHER_PORTAL
     }
 
+    enum class ItemBlockStrategy {
+        DELETE,
+        IGNORE
+    }
+
     companion object {
 
         fun fromFileConfiguration(configuration: FileConfiguration): Config {
@@ -43,6 +49,8 @@ data class Config(
             val enableWhitelist = configuration.getBoolean("enableWhitelist")
             val friendlyFire = configuration.getBoolean("friendlyFire")
             val fishingRod = configuration.getBoolean("fishingRod")
+            val itemBlockStrategy = configuration.getString("itemBlockStrategy")?.let { ItemBlockStrategy.valueOf(it) }
+                ?: error("Missing itemBlockStrategy property in config")
             val blockedItems = configuration.getStringList("blockedItems").map(Material::valueOf)
 
             val timeNode = configuration.getConfigurationSection("time") ?: error("Missing time property in config")
@@ -88,6 +96,7 @@ data class Config(
                 enableWhitelist,
                 friendlyFire,
                 fishingRod,
+                itemBlockStrategy,
                 blockedItems,
                 time,
                 tablist,

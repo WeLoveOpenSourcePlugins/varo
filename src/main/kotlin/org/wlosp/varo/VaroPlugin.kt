@@ -5,6 +5,9 @@ import org.bukkit.plugin.java.JavaPlugin
 import org.wlosp.varo.configuration.Config
 import org.wlosp.varo.dependencies.Dependency
 import org.wlosp.varo.dependencies.loadDependencies
+import org.wlosp.varo.listeners.registerDamageListener
+import org.wlosp.varo.listeners.registerItemBlockListeners
+import org.wlosp.varo.listeners.registerShutdownHandler
 import kotlin.properties.Delegates
 
 /**
@@ -13,7 +16,7 @@ import kotlin.properties.Delegates
 @Suppress("unused")
 class VaroPlugin : JavaPlugin() {
     private var dependencyManager by Delegates.notNull<BukkitLibraryManager>()
-    private var config by Delegates.notNull<Config>()
+    var varoConfig by Delegates.notNull<Config>()
 
     override fun onEnable() {
         dependencyManager = BukkitLibraryManager(this)
@@ -21,11 +24,16 @@ class VaroPlugin : JavaPlugin() {
 
         saveDefaultConfig()
         loadConfig()
+
+        // Events
+        registerDamageListener()
+        registerShutdownHandler()
+        registerItemBlockListeners()
     }
 
     private fun loadConfig() {
-        config = Config.fromFileConfiguration(getConfig())
-        println(config)
+        varoConfig = Config.fromFileConfiguration(getConfig())
+        println(varoConfig)
     }
 
 }
