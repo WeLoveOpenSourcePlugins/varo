@@ -3,6 +3,7 @@ package org.wlosp.varo.configuration
 import org.bukkit.Material
 import org.bukkit.configuration.ConfigurationSection
 import org.bukkit.configuration.file.FileConfiguration
+import org.wlosp.varo.database.DatabaseType
 import java.time.Duration
 import java.time.ZoneId
 
@@ -17,13 +18,31 @@ data class Config(
     val time: TimeConfig,
     val tablist: TablistConfig,
     val strikes: Map<Int, StrikeAction>,
-    val locations: Map<VaroLocation, VaroCoordinates>
+    val locations: Map<VaroLocation, VaroCoordinates>,
+    val database: DatabaseConfig
 ) {
     data class TimeConfig(val timezone: ZoneId, val startTime: Duration, val shutdownTime: Duration)
 
     data class TablistConfig(val header: String, val footer: String)
 
     data class VaroCoordinates(val x: Int, val y: Int, val z: Int)
+
+    interface DatabaseConfig {
+        val databaseType: DatabaseType
+    }
+
+    data class FileDatabaseConfig(override val databaseType: DatabaseType, val file: String) : DatabaseConfig
+
+    data class ServerDatabaseConfig(
+        override val databaseType: DatabaseType,
+        val host: String,
+        val port: Int,
+        val username: String,
+        val database: String,
+        val password: String,
+        val useSSL: Boolean
+    ) :
+        DatabaseConfig
 
     enum class StrikeAction {
         PUBLISH_COORDINATES,
@@ -90,6 +109,30 @@ data class Config(
                     )
                 }
 
+            val databaseNode =
+                configuration.getConfigurationSection("database") ?: error("Missing config property database")
+            val type = databaseNode.getString("type")?.let { DatabaseType.valueOf(it.toUpperCase()) }
+                ?: error("Missing config property database")
+            val database = when (type) {
+                DatabaseType.SQLITE -> {
+                    val file = databaseNode.getString("file") ?: error("Missing config property database.file")
+                    FileDatabaseConfig(type, file)
+                }
+                DatabaseType.MYSQL, DatabaseType.POSTGRESQL -> {
+                    val host = databaseNode.getString("host") ?: error("Missing config property database.host")
+                    val port = databaseNode.getInt("port")
+                    val username =
+                        databaseNode.getString("username") ?: error("Missing config property database.username")
+                    val database =
+                        databaseNode.getString("database") ?: error("Missing config property database.database")
+                    val password =
+                        databaseNode.getString("password") ?: error("Missing config property database.password")
+                    val useSSL = databaseNode.getBoolean("useSSL")
+
+                    ServerDatabaseConfig(type, host, port, username, database, password, useSSL)
+                }
+            }
+
             return Config(
                 name,
                 gracePeriod,
@@ -101,12 +144,12 @@ data class Config(
                 time,
                 tablist,
                 strikes,
-                locations
+                locations,
+                database
             )
         }
 
         private fun parseDuration(input: String): Duration {
-            println(input)
             val match = PATTERN.matchEntire(input) ?: error("Time has to be in HH:mm format.")
             val (_, hour, minute) = match.groupValues
             return Duration.ofHours(hour.toLong()).plusMinutes(minute.toLong())

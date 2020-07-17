@@ -35,8 +35,10 @@ internal fun VaroPlugin.registerShutdownHandler() {
     GlobalScope.launch {
         delay(Duration.between(OffsetDateTime.now(), kickDate))
         onlinePlayers.forEach {
-            this@registerShutdownHandler.run {
-                it.kickPlayer("Der server schließt!")
+            if (!it.hasPermission("varo.joinbypass")) {
+                this@registerShutdownHandler.run {
+                    it.kickPlayer("pDer server schließt!")
+                }
             }
         }
     }

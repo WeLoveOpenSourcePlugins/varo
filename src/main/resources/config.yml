@@ -9,6 +9,17 @@ itemBlockStrategy: DELETE # or IGNORE
 blockedItems:
   - STONE
 
+database:
+  type: SQLITE # SQLITE, MYSQL or POSTGRESQL
+  file: database.db # only needed for SQLITE type
+  # those are only needed for MYSQL and POSTGRESQL
+#  host: localhost
+#  port: 3306
+#  username: user
+#  database: varo
+#  password: sehrsicher
+#  useSSL: false
+
 time:
   timezone: Europe/Berlin
   startTime: '11:00'
