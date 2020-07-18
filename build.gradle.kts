@@ -23,6 +23,8 @@ repositories {
 }
 
 dependencies {
+    implementation(project(":api"))
+
     compileOnly("org.spigotmc", "spigot-api", "1.16.1-R0.1-SNAPSHOT")
     compileOnly("com.github.johnnyjayjay", "spiglin", "develop-SNAPSHOT")
     implementation("net.byteflux", "libby-bukkit", "0.0.1")

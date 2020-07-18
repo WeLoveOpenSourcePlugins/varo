@@ -8,8 +8,7 @@ import org.wlosp.varo.VaroPlugin
 import org.wlosp.varo.configuration.Config
 import org.wlosp.varo.dependencies.Dependency
 import org.wlosp.varo.dependencies.loadDependency
-import org.wlosp.varo.entities.VaroPlayers
-import org.wlosp.varo.entities.VaroTeams
+import org.wlosp.varo.entities.*
 import java.nio.file.Files
 
 internal fun VaroPlugin.connectToDatabase() {
@@ -47,6 +46,14 @@ internal fun VaroPlugin.connectToDatabase() {
     }
 
     transaction {
-        SchemaUtils.createMissingTablesAndColumns(VaroTeams, VaroPlayers)
+        SchemaUtils.createMissingTablesAndColumns(VaroTeams, VaroPlayers, VaroStorageTable)
+
+        if (VaroStorage.all().count() == 0L) {
+            VaroStorage.new(1) {
+                stage = Stage.SETUP
+            }
+        } else {
+            stage = VaroStorage.storage.stage
+        }
     }
 }

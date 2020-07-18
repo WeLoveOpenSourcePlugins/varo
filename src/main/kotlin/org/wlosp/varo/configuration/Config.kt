@@ -3,12 +3,14 @@ package org.wlosp.varo.configuration
 import org.bukkit.Material
 import org.bukkit.configuration.ConfigurationSection
 import org.bukkit.configuration.file.FileConfiguration
+import org.wlosp.varo.api.entities.StrikeAction
 import org.wlosp.varo.database.DatabaseType
 import java.time.Duration
 import java.time.ZoneId
 
 data class Config(
     val name: String,
+    val startCountDown: Int,
     val gracePeriod: Int,
     val enableWhitelist: Boolean,
     val friendlyFire: Boolean,
@@ -44,12 +46,6 @@ data class Config(
     ) :
         DatabaseConfig
 
-    enum class StrikeAction {
-        PUBLISH_COORDINATES,
-        DELETE_INVENTORY_AND_CHEST,
-        BAN
-    }
-
     enum class VaroLocation {
         SPAWN,
         NETHER_PORTAL
@@ -65,6 +61,7 @@ data class Config(
         fun fromFileConfiguration(configuration: FileConfiguration): Config {
             val name = configuration.getString("name") ?: error("Missing name property in config")
             val gracePeriod = configuration.getInt("gracePeriod")
+            val startCountDown = configuration.getInt("startCountDown")
             val enableWhitelist = configuration.getBoolean("enableWhitelist")
             val friendlyFire = configuration.getBoolean("friendlyFire")
             val fishingRod = configuration.getBoolean("fishingRod")
@@ -135,6 +132,7 @@ data class Config(
 
             return Config(
                 name,
+                startCountDown,
                 gracePeriod,
                 enableWhitelist,
                 friendlyFire,

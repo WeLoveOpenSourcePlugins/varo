@@ -9,4 +9,5 @@ internal fun VaroPlugin.registerVaroCommand() = command("varo") {
         varoTeamDeleteCommand()
     }
     varoResetCommand()
+    varoStartCommand(this@registerVaroCommand)
 }

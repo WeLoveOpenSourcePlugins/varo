@@ -2,6 +2,7 @@ name: WLOSPVaro
 gracePeriod: 15000
 enableWhitelist: true
 borderSize: 1
+startCountDown: 15
 shrinkBorderOnDeath: 1
 friendlyFire: false
 fishingRodPvp: true

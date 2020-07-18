@@ -5,16 +5,23 @@ import org.bukkit.Bukkit
 import org.bukkit.event.player.PlayerLoginEvent
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.wlosp.varo.VaroPlugin
-import org.wlosp.varo.entities.VaroPlayer
+import org.wlosp.varo.entities.DatabaseVaroPlayer
 import org.wlosp.varo.util.ScoreboardTeamUtils
 
 fun VaroPlugin.registerTeamHandler() {
     hear<PlayerLoginEvent> {
-        val varoPlayer = transaction { VaroPlayer.findById(it.player.uniqueId) }
+        val varoPlayer = transaction { DatabaseVaroPlayer.findById(it.player.uniqueId) }
 
         if (varoPlayer == null) {
             if (!it.player.hasPermission("varo.joinbypass")) {
                 it.disallow(PlayerLoginEvent.Result.KICK_OTHER, "Du nimmst nicht an Varo teil!")
+            }
+            return@hear
+        }
+
+        if (!varoPlayer.isAlive) {
+            if (!it.player.hasPermission("varo.joinbypass")) {
+                it.disallow(PlayerLoginEvent.Result.KICK_OTHER, "Du bist von Varo ausgeschieden!")
             }
             return@hear
         }
