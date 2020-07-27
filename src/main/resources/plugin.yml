@@ -2,3 +2,7 @@ name: Varo
 version: @version@
 main: org.wlosp.varo.VaroPlugin
 api-version: '1.16'
+
+commands:
+  varo:
+    description: Generic varo command

@@ -17,16 +17,30 @@ repositories {
     maven("https://hub.spigotmc.org/nexus/content/repositories/snapshots")
     maven("https://dl.bintray.com/johnnyjayjay/spiglin")
     maven("https://repo.byteflux.net/repository/maven-releases/")
+    maven("https://jitpack.io")
+    jcenter()
     mavenCentral()
 }
 
 dependencies {
+    implementation(project(":api"))
+
     compileOnly("org.spigotmc", "spigot-api", "1.16.1-R0.1-SNAPSHOT")
-    compileOnly("com.github.johnnyjayjay", "spiglin", "2.0.3")
+    compileOnly("com.github.johnnyjayjay", "spiglin", "develop-SNAPSHOT")
     implementation("net.byteflux", "libby-bukkit", "0.0.1")
+
+    // Database
+    compileOnly("org.jetbrains.exposed", "exposed-core", "0.25.1")
+    compileOnly("org.jetbrains.exposed", "exposed-dao", "0.25.1")
+    compileOnly("org.jetbrains.exposed", "exposed-jdbc", "0.25.1")
+    compileOnly("com.zaxxer", "HikariCP", "3.4.5")
+
+    // HTTP
+    compileOnly("com.squareup.okhttp3", "okhttp", "4.8.0")
 
     compileOnly("org.jetbrains.kotlinx", "kotlinx-coroutines-jdk8", "1.3.4")
     implementation(kotlin("stdlib-jdk8"))
+    implementation(kotlin("reflect"))
 }
 
 tasks {
